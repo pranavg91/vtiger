@@ -47,38 +47,43 @@ public class Email2 {
 
 				driver.manage().window().maximize();
 				Thread.sleep(3000);
-				
+
 				break;
 
 			}
-			
-			 driver.manage().window().maximize();
 
-		        wait.until(ExpectedConditions.elementToBeClickable(
-		                By.cssSelector("[title='Select']"))).click();
+			driver.manage().window().maximize();
 
+			wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[title='Select']"))).click();
 
 			wait.until(ExpectedConditions.numberOfWindowsToBe(3));
-			Set<String> thirdWindow = driver.getWindowHandles();
+			Set<String> allWindows = driver.getWindowHandles();
 
-			for (String win1 : thirdWindow) {
-				if (!win1.equals(mainWindow) && !win1.equals(secondWindow)) {
-					driver.switchTo().window(win1);
-					{
-						Thread.sleep(3000);
-						System.out.println("Switched to third window");
+			for (String w : allWindows) {
+				driver.switchTo().window(w);
+				{
+					if (driver.getCurrentUrl().contains("Contacts")) {
 						driver.manage().window().maximize();
-						
-						wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()=' TestContact']"))).click();
-						//driver.findElement(By.xpath("//a[text()=' TestContact']")).click();
-						break;
-						
+
+						wait.until(
+								ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()=' TestContact']")))
+								.click();
+
 					}
 				}
-				Thread.sleep(3000);
-				driver.quit();
 			}
-			
+
+			for (String w : allWindows) {
+				driver.switchTo().window(w);
+				{
+					if (driver.getCurrentUrl().contains("EditView")) {
+						driver.manage().window().maximize();
+						break;
+					}
+				}
+			}
+			// rest of the code
+
 		}
 
 	}

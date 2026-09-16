@@ -20,37 +20,51 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.Select;
 
+import generic_utility.FileUtility;
+
 public class Leads {
 
 	public static void main(String[] args) throws InterruptedException, IOException, ParseException {
 		// TODO Auto-generated method stub
-
-		FileReader fr = new FileReader("./src/test/resources/Commondata.json");
-
-		JSONParser parser = new JSONParser();
-		Object obj = parser.parse(fr);
-
-		JSONObject jobj = (JSONObject) obj;
-
-		String browser = jobj.get("browser").toString();
-		String url = jobj.get("url").toString();
-		String username = jobj.get("us").toString();
-		String password = jobj.get("password").toString();
+		//readdatafrom json file
+//		FileReader fr = new FileReader("./src/test/resources/Commondata.json");
+//
+//		JSONParser parser = new JSONParser();
+//		Object obj = parser.parse(fr);
+//
+//		JSONObject jobj = (JSONObject) obj;
+//
+//		String browser = jobj.get("browser").toString();
+//		String url = jobj.get("url").toString();
+//		String username = jobj.get("us").toString();
+//		String password = jobj.get("password").toString();
+		
+//		Now read data from utility file
+		
+		String browser = FileUtility.getDataFromJsonFile("browser");
+		String url = FileUtility.getDataFromJsonFile("url");
+		String username = FileUtility.getDataFromJsonFile("us");
+		String password= FileUtility.getDataFromJsonFile("password");
 		
 		//read data from excel
-		FileInputStream fs = new FileInputStream("./src/test/resources/ExcelData.xlsx");
-
-		Workbook wb = WorkbookFactory.create(fs);
-
-		Sheet ws = wb.getSheet("Org");
-
-		Row row = ws.getRow(2);
-		Cell cell = row.getCell(0);
-
-		System.out.println(cell.getStringCellValue());
-
-		fs.close();
-		wb.close();
+//		FileInputStream fs = new FileInputStream("./src/test/resources/ExcelData.xlsx");
+//
+//		Workbook wb = WorkbookFactory.create(fs);
+//
+//		Sheet ws = wb.getSheet("Org");
+//
+//		Row row = ws.getRow(2);
+//		Cell cell = row.getCell(0);
+//
+//		System.out.println(cell.getStringCellValue());
+//
+//		fs.close();
+//		wb.close();
+		
+		
+		String leadName = FileUtility.readDataFromExcel("Lead", 1, 0);
+		String companyName = FileUtility.readDataFromExcel("Lead", 1, 1);
+	
 		WebDriver driver = null;
 
 		if (browser.equals("chrome")) {
@@ -79,9 +93,11 @@ public class Leads {
 		driver.findElement(By.cssSelector("[title='Create Lead...']")).click();
 		Thread.sleep(2000);
 		WebElement enterLastName = driver.findElement(By.cssSelector("[name='lastname']"));
-		enterLastName.sendKeys("Test");
+		//enterLastName.sendKeys("Test");
+		enterLastName.sendKeys(leadName);
 
-		driver.findElement(By.cssSelector("[name='company']")).sendKeys("Test1");
+		//driver.findElement(By.cssSelector("[name='company']")).sendKeys("Test1");
+		driver.findElement(By.cssSelector("[name='company']")).sendKeys(companyName);
 
 		driver.findElement(By.xpath("(//*[@title='Edit [Alt+E]'])[1]")).click();
 

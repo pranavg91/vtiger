@@ -26,38 +26,51 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
+import generic_utility.FileUtility;
+
 public class Organizations {
 
 	public static void main(String[] args) throws InterruptedException, IOException, ParseException {
 		// TODO Auto-generated method stub
 
-		FileReader fr = new FileReader("./src/test/resources/Commondata.json");
+//		FileReader fr = new FileReader("./src/test/resources/Commondata.json");
+//
+//		JSONParser pareser = new JSONParser();
+//		Object obj = pareser.parse(fr);
+//
+//		JSONObject jobj = (JSONObject) obj;
+//
+//		String browser = jobj.get("browser").toString();
+//		String url = jobj.get("url").toString();
+//		String userName = jobj.get("us").toString();
+//		String password = jobj.get("password").toString();
 
-		JSONParser pareser = new JSONParser();
-		Object obj = pareser.parse(fr);
+		String browser = FileUtility.getDataFromJsonFile("browser");
+		String url = FileUtility.getDataFromJsonFile("url");
+		String username = FileUtility.getDataFromJsonFile("us");
+		String password = FileUtility.getDataFromJsonFile("password");
 
-		JSONObject jobj = (JSONObject) obj;
+		// readdata from excel.
 
-		String browser = jobj.get("browser").toString();
-		String url = jobj.get("url").toString();
-		String userName = jobj.get("us").toString();
-		String password = jobj.get("password").toString();
+//		FileInputStream fs = new FileInputStream("./src/test/resources/ExcelData.xlsx");
+//
+//		Workbook wb = WorkbookFactory.create(fs);
+//
+//		Sheet ws = wb.getSheet("Org");
+//
+//		Row row = ws.getRow(2);
+//		Cell cell = row.getCell(0);
+//
+//		System.out.println(cell.getStringCellValue());
+//
+//		fs.close();
+//		wb.close();
 		
-		//readdata from excel.
-
-		FileInputStream fs = new FileInputStream("./src/test/resources/ExcelData.xlsx");
-
-		Workbook wb = WorkbookFactory.create(fs);
-
-		Sheet ws = wb.getSheet("Org");
-
-		Row row = ws.getRow(2);
-		Cell cell = row.getCell(0);
-
-		System.out.println(cell.getStringCellValue());
-
-		fs.close();
-		wb.close();
+		
+		//read data from utility file
+		double random = Math.random() * 1000;
+		String accountName = FileUtility.readDataFromExcel("Org", 1, 0) + random;
+		String email = FileUtility.readDataFromExcel("Org", 1, 4);
 
 		WebDriver driver = null;
 
@@ -77,7 +90,7 @@ public class Organizations {
 		driver.get(url);
 
 		Thread.sleep(10000);
-		driver.findElement(By.name("user_name")).sendKeys(userName);
+		driver.findElement(By.name("user_name")).sendKeys(username);
 
 		driver.findElement(By.name("user_password")).sendKeys(password);
 
@@ -88,8 +101,6 @@ public class Organizations {
 		driver.findElement(By.xpath("//*[@class='hdrTabBg']//td//tr/td/a[text()='Organizations']")).click();
 
 		driver.findElement(By.cssSelector("[title='Create Organization...']")).click();
-
-		String accountName = "Test" + (int) (Math.random() * 1000);
 
 		driver.findElement(By.cssSelector("[name='accountname']")).sendKeys(accountName);
 
@@ -104,7 +115,7 @@ public class Organizations {
 
 		driver.findElement(By.id("phone")).sendKeys("9878987898");
 		Thread.sleep(2000);
-		driver.findElement(By.id("email1")).sendKeys("pranav@gmail.com");
+		driver.findElement(By.id("email1")).sendKeys(email);
 
 		Thread.sleep(2000);
 
